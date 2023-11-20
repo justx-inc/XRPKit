@@ -35,7 +35,7 @@ public class XRPTransaction: XRPRawTransaction {
                 // dictionary containing transaction fields
                 let filledFields: [String:Any] = [
                     "LastLedgerSequence" : ledgerInfo.index+5,
-                    "Fee" : "40", // FIXME: determine fee automatically
+                    "Fee" : String(ledgerInfo.minFee),
                     "Sequence" : accountInfo.sequence,
                 ]
                 self.fields = self.fields.merging(self.enforceJSONTypes(fields: filledFields)) { (_, new) in new }
