@@ -265,4 +265,42 @@ public struct XRPLedger {
         return promise.futureResult
     }
     
+    static func getNftSellOffers(nftId: String) -> EventLoopFuture<XRPSellOfferResponse> {
+        
+        let promise = eventGroup.next().makePromise(of: XRPSellOfferResponse.self)
+        
+        let parameters: [String: Any] = [
+            "method" : "nft_sell_offers",
+            "params": [
+                [
+                    "nft_id" : nftId
+                ]
+            ]
+        ]
+        _ = HTTP.post(url: url, parameters: parameters).map { (result) in
+            let JSON = result as! NSDictionary
+            let info = JSON["result"] as! NSDictionary
+            let status = info["status"] as! String
+            if status != "error" {
+                let nftId = info["nft_id"] as! String
+                let _array = info["offers"] as! [NSDictionary]
+                let offers = _array.map({ (offer) -> XRPSellOffer in
+                    let amount = offer["amount"] as! String
+                    let flags = offer["flags"] as! Int
+                    let nftOfferIndex = offer["nft_offer_index"] as! String
+                    let owner = offer["owner"] as! String
+                    return XRPSellOffer(amount: amount, flags: flags, nftOfferIndex: nftOfferIndex, owner: owner)
+                })
+                let sellOfferResponse = XRPSellOfferResponse(nftId: nftId, offers: offers)
+                promise.succeed(sellOfferResponse)
+            } else {
+                let errorMessage = info["error_message"] as! String
+                let error = LedgerError.runtimeError(errorMessage)
+                promise.fail(error)
+            }
+        }.recover { (error) in
+            promise.fail(error)
+        }
+        return promise.futureResult
+    }
 }
