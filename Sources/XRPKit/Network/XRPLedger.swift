@@ -265,7 +265,7 @@ public struct XRPLedger {
         return promise.futureResult
     }
     
-    static func getNftSellOffers(nftId: String) -> EventLoopFuture<XRPSellOfferResponse> {
+    public static func getNftSellOffers(nftId: String) -> EventLoopFuture<XRPSellOfferResponse> {
         
         let promise = eventGroup.next().makePromise(of: XRPSellOfferResponse.self)
         
