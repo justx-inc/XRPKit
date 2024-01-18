@@ -1524,6 +1524,16 @@ let serializerDefinitions = """
 }
 ],
 [
+"NFTokenSellOffer",
+{
+"nth": 29,
+"isVLEncoded": false,
+"isSerialized": true,
+"isSigningField": true,
+"type": "Hash256"
+}
+],
+[
 "TickSize",
 {
 "nth": 16,
@@ -1667,6 +1677,7 @@ let serializerDefinitions = """
 "CheckCancel": 18,
 "DepositPreauth": 19,
 "TrustSet": 20,
+"NFTokenAcceptOffer": 29,
 "EnableAmendment": 100,
 "SetFee": 101
 }
